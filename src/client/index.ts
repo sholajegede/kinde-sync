@@ -3,8 +3,8 @@ import type { ComponentApi } from "../component/_generated/component.js";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 
 export type KindeSyncOptions = {
-  /** Your Kinde domain e.g. https://yourapp.kinde.com */
-  KINDE_DOMAIN: string;
+  /** Your Kinde issuer URL e.g. https://yourapp.kinde.com */
+  KINDE_ISSUER_URL: string;
 };
 
 /**
@@ -36,7 +36,7 @@ export class KindeSync {
     public component: ComponentApi,
     private options: KindeSyncOptions,
   ) {
-    const domain = options.KINDE_DOMAIN;
+    const domain = options.KINDE_ISSUER_URL;
     const component_ = component;
 
     this.webhookHandler = httpActionGeneric(async (ctx, request) => {
@@ -51,7 +51,7 @@ export class KindeSync {
 
       // 2. Verify JWT via Kinde JWKS
       const JWKS = createRemoteJWKSet(
-        new URL(`${domain}/.well-known/jwks`),
+        new URL(`${domain}/.well-known/jwks.json`),
       );
       let payload: Record<string, unknown>;
       try {

@@ -1,7 +1,10 @@
 {
   "name": "@sholajegede/kinde-sync",
   "description": "A kinde sync component for Convex.",
-  "repository": "github:sholajegede/kinde-sync",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sholajegede/kinde-sync.git"
+  },
   "homepage": "https://github.com/sholajegede/kinde-sync#readme",
   "bugs": {
     "url": "https://github.com/sholajegede/kinde-sync/issues"
