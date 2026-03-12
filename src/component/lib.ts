@@ -6,6 +6,25 @@ import {
   query,
 } from "./_generated/server.js";
 
+const orgValidator = v.object({
+  code: v.string(),
+  roles: v.optional(v.string()),
+  permissions: v.optional(v.string()),
+});
+
+const userValidator = v.object({
+  _id: v.id("kindeUsers"),
+  _creationTime: v.number(),
+  kindeId: v.string(),
+  email: v.string(),
+  firstName: v.optional(v.string()),
+  lastName: v.optional(v.string()),
+  imageUrl: v.optional(v.string()),
+  isSuspended: v.boolean(),
+  organizations: v.array(orgValidator),
+  lastSyncedAt: v.number(),
+});
+
 // ─── Internal helpers ────────────────────────────────────────────────────────
 
 export const isWebhookProcessed = internalQuery({
@@ -40,13 +59,7 @@ export const upsertUser = internalMutation({
     lastName: v.optional(v.string()),
     imageUrl: v.optional(v.string()),
     isSuspended: v.boolean(),
-    organizations: v.array(
-      v.object({
-        code: v.string(),
-        roles: v.optional(v.string()),
-        permissions: v.optional(v.string()),
-      }),
-    ),
+    organizations: v.array(orgValidator),
   },
   returns: v.id("kindeUsers"),
   handler: async (ctx, args) => {
@@ -92,8 +105,6 @@ export const deleteUser = internalMutation({
   },
 });
 
-// ─── Public mutation (called from HTTP action in client) ─────────────────────
-
 export const handleWebhookEvent = mutation({
   args: {
     webhookId: v.string(),
@@ -104,24 +115,16 @@ export const handleWebhookEvent = mutation({
     lastName: v.optional(v.string()),
     imageUrl: v.optional(v.string()),
     isSuspended: v.boolean(),
-    organizations: v.array(
-      v.object({
-        code: v.string(),
-        roles: v.optional(v.string()),
-        permissions: v.optional(v.string()),
-      }),
-    ),
+    organizations: v.array(orgValidator),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    // Idempotency check
     const alreadyProcessed = await ctx.db
       .query("processedWebhooks")
       .withIndex("by_webhookId", (q) => q.eq("webhookId", args.webhookId))
       .first();
     if (alreadyProcessed) return null;
 
-    // Mark as processed
     await ctx.db.insert("processedWebhooks", {
       webhookId: args.webhookId,
       processedAt: Date.now(),
@@ -136,7 +139,6 @@ export const handleWebhookEvent = mutation({
       return null;
     }
 
-    // user.created or user.updated
     const existing = await ctx.db
       .query("kindeUsers")
       .withIndex("by_kindeId", (q) => q.eq("kindeId", args.kindeId))
@@ -165,27 +167,6 @@ export const handleWebhookEvent = mutation({
     }
     return null;
   },
-});
-
-// ─── Public queries (reactive) ───────────────────────────────────────────────
-
-const userValidator = v.object({
-  _id: v.id("kindeUsers"),
-  _creationTime: v.number(),
-  kindeId: v.string(),
-  email: v.string(),
-  firstName: v.optional(v.string()),
-  lastName: v.optional(v.string()),
-  imageUrl: v.optional(v.string()),
-  isSuspended: v.boolean(),
-  organizations: v.array(
-    v.object({
-      code: v.string(),
-      roles: v.optional(v.string()),
-      permissions: v.optional(v.string()),
-    }),
-  ),
-  lastSyncedAt: v.number(),
 });
 
 export const getUser = query({
