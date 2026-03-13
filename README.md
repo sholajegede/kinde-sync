@@ -3,6 +3,7 @@
 A [Convex component](https://www.convex.dev/components) that syncs [Kinde](https://kinde.com) users into your Convex database in real time via webhooks. When a user is created, updated, or deleted in Kinde, your Convex database updates instantly — no polling, no boilerplate JWT verification, no manual sync logic.
 
 [![npm version](https://badge.fury.io/js/@sholajegede%2Fkinde-sync.svg)](https://badge.fury.io/js/@sholajegede%2Fkinde-sync)
+[![Convex Component](https://www.convex.dev/components/badge/sholajegede/kinde-sync)](https://www.convex.dev/components/sholajegede/kinde-sync)
 
 Found a bug? Feature request? [File it here](https://github.com/sholajegede/kinde-sync/issues).
 

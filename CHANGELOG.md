@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3
+
+- Fix null permissions from Kinde webhook payload
+
 ## 0.1.2
 
 - Add auth.config.ts example for ctx.auth support
