@@ -8,8 +8,8 @@ import {
 
 const orgValidator = v.object({
   code: v.string(),
-  roles: v.optional(v.string()),
-  permissions: v.optional(v.string()),
+  roles: v.optional(v.union(v.string(), v.array(v.string()))),
+  permissions: v.optional(v.union(v.string(), v.array(v.string()))),
 });
 
 const userValidator = v.object({

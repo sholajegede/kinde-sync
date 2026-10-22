@@ -61,11 +61,10 @@ export class KindeSync {
         (user["organizations"] as unknown[]) ?? []
       ).map((org) => {
         const o = org as Record<string, unknown>;
-        const permissions = o["permissions"];
         return {
           code: (o["code"] as string) ?? "",
-          roles: (o["roles"] as string) || undefined,
-          permissions: typeof permissions === "string" ? permissions : undefined,
+          roles: normalizeClaim(o["roles"]),
+          permissions: normalizeClaim(o["permissions"]),
         };
       });
 
@@ -87,6 +86,23 @@ export class KindeSync {
       });
     });
   }
+}
+
+function normalizeClaim(value: unknown): string | string[] | undefined {
+  if (typeof value === "string") return value || undefined;
+  if (!Array.isArray(value)) return undefined;
+  const items = value
+    .map((item) => {
+      if (typeof item === "string") return item;
+      if (item && typeof item === "object") {
+        const entry = item as Record<string, unknown>;
+        const key = entry["key"] ?? entry["name"] ?? entry["id"];
+        return typeof key === "string" ? key : undefined;
+      }
+      return undefined;
+    })
+    .filter((item): item is string => !!item);
+  return items.length > 0 ? items : undefined;
 }
 
 export type { ComponentApi };

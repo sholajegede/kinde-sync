@@ -188,7 +188,11 @@ const users = useQuery(api.myFunctions.listUsers, {});
   lastName?: string;
   imageUrl?: string;
   isSuspended: boolean;
-  organizations: { code: string; roles?: string; permissions?: string; }[];
+  organizations: {
+    code: string;
+    roles?: string | string[];
+    permissions?: string | string[];
+  }[];
   lastSyncedAt: number;
 }
 ```

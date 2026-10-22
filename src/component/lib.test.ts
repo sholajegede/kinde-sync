@@ -30,6 +30,30 @@ describe("component lib", () => {
     expect(user?.email).toBe("jane@example.com");
   });
 
+  test("handleWebhookEvent stores array roles and permissions", async () => {
+    const t = initConvexTest();
+    await t.mutation(api.lib.handleWebhookEvent, {
+      webhookId: "webhook-roles-001",
+      type: "user.created",
+      kindeId: "kp_roles123",
+      email: "roles@example.com",
+      isSuspended: false,
+      organizations: [
+        {
+          code: "org_1",
+          roles: ["admin", "editor"],
+          permissions: ["read:data", "write:data"],
+        },
+      ],
+    });
+    const user = await t.query(api.lib.getUser, { kindeId: "kp_roles123" });
+    expect(user?.organizations[0]?.roles).toEqual(["admin", "editor"]);
+    expect(user?.organizations[0]?.permissions).toEqual([
+      "read:data",
+      "write:data",
+    ]);
+  });
+
   test("handleWebhookEvent is idempotent", async () => {
     const t = initConvexTest();
     const args = {

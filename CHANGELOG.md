@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.4
+
+- Accept array-valued `roles` and `permissions` from Kinde webhook payloads
+
 ## 0.1.3
 
 - Fix null permissions from Kinde webhook payload

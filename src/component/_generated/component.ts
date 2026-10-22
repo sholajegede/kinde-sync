@@ -40,8 +40,8 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
           lastSyncedAt: number;
           organizations: Array<{
             code: string;
-            permissions?: string;
-            roles?: string;
+            permissions?: string | Array<string>;
+            roles?: string | Array<string>;
           }>;
         },
         Name
@@ -62,8 +62,8 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
           lastSyncedAt: number;
           organizations: Array<{
             code: string;
-            permissions?: string;
-            roles?: string;
+            permissions?: string | Array<string>;
+            roles?: string | Array<string>;
           }>;
         },
         Name
@@ -80,8 +80,8 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
           lastName?: string;
           organizations: Array<{
             code: string;
-            permissions?: string;
-            roles?: string;
+            permissions?: string | Array<string>;
+            roles?: string | Array<string>;
           }>;
           type: string;
           webhookId: string;
@@ -105,8 +105,8 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
           lastSyncedAt: number;
           organizations: Array<{
             code: string;
-            permissions?: string;
-            roles?: string;
+            permissions?: string | Array<string>;
+            roles?: string | Array<string>;
           }>;
         }>,
         Name
